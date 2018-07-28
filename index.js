@@ -9,5 +9,5 @@ app.get('/', (req, res) => {
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
-  console.log(`Started listening to port ${PORT}`);
+  console.log(`Started listening to port ${PORT}.`);
 });
