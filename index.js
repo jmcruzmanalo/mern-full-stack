@@ -1,4 +1,5 @@
-const {PORT} = require('./config/config');
+const {PORT, COOKIE_KEY} = require('./config/config');
+
 
 const express = require('express');
 const cookieSession = require('cookie-session');
@@ -14,7 +15,7 @@ const app = express();
 app.use(
   cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000,
-    keys: [process.env.cookieKey]
+    keys: [COOKIE_KEY]
   })
 );
 app.use(passport.initialize());
