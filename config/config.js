@@ -9,7 +9,7 @@ if (env === 'development' || env === 'test') {
     cfg[key] = config[key];
   });
 } else {
-  const config = require('./config.dev')[env];
+  const config = require('./config.prod')[env];
   Object.keys(config).forEach((key) => {
     process.env[key] = config[key];
     cfg[key] = config[key];
