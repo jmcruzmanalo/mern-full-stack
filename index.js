@@ -11,7 +11,6 @@ const bodyParser = require('body-parser');
 require('./db/mongoose');
 require('./services/passport');
 
-const { User } = require('./db/models/user');
 
 const app = express();
 app.use(bodyParser.json());
@@ -27,6 +26,15 @@ app.use(passport.session());
 // Require routes
 require('./routes/auth.routes')(app);
 require('./routes/billing.routes')(app);
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('client/build'));
+
+  const path = require('path');
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  })
+}
 
 app.listen(PORT, () => {
   console.log(`Started listening to port ${PORT}.`);
