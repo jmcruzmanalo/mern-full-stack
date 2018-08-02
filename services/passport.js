@@ -1,6 +1,6 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const {GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET} = require('../config/config');
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = require('../config/config');
 const { User } = require('../db/models/user');
 
 
@@ -25,27 +25,20 @@ passport.use(
     callbackURL: '/auth/google/callback',
     proxy: true
   }, async (accessToken, refreshToken, profile, done) => {
-    // console.log('access token', accessToken);
-    // console.log('refresh token', refreshToken);
-    console.log('profile:', profile);
-
     let user = await User.findOne({
       googleId: profile.id
     });
 
-    if (user) {
+    if (user) return done(null, user);
+
+    user = new User({ googleId: profile.id });
+    try {
+      await user.save();
       done(null, user);
-    } else {
-      user = new User({
-        googleId: profile.id
-      });
-      try {
-        await user.save();
-        done(null, user);
-      } catch (e) {
-        console.log(e);
-        done(e);
-      }
+    } catch (e) {
+      console.log(e);
+      done(e);
     }
+
 
   }));
